@@ -51,6 +51,7 @@ void goBackward(unsigned int speed, unsigned int time) {
   }
 }
 void leftBackward(unsigned int speed, unsigned int time) {
+  brakeOff();
   digitalWrite(LEFT_DIRECTION, LOW);
   leftSpeed(speed);
   if (time > 0) {
@@ -58,6 +59,7 @@ void leftBackward(unsigned int speed, unsigned int time) {
   }
 }
 void rightBackward(unsigned int speed, unsigned int time) {
+  brakeOff();
   digitalWrite(RIGHT_DIRECTION, HIGH);
   rightSpeed(speed);
   if (time > 0) {

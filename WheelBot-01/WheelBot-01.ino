@@ -1,7 +1,13 @@
 #include <NewPing.h>
+#include <CustomStepper.h>
 
-#define DEBUG_MODE true
+#define DEBUG_MODE false
 #define DEBUG_RATE 115200
+
+#define STEPPER_1 22
+#define STEPPER_2 24
+#define STEPPER_3 26
+#define STEPPER_4 28
 
 #define SONAR_PING_PIN 39
 #define SONAR_GROUND_PIN 43
@@ -24,14 +30,15 @@
 
 #define SPEED_MAX 255
 #define SPEED_MEDIUM 150
-#define SPEED_LOW 70
+#define SPEED_LOW 80
 #define SPEED_ZERO 0
 
-#define CURRENT_CONSUMPTION_MAX 250
+#define CURRENT_CONSUMPTION_MAX 270
 
 void setup() {
   initLogger();
   initSonar();
+  initHead();
   
   pinMode(LEFT_BRAKE, OUTPUT);
   pinMode(LEFT_DIRECTION, OUTPUT);
@@ -40,19 +47,21 @@ void setup() {
   pinMode(RIGHT_DIRECTION, OUTPUT);
 }
 
-void loop() {
+void loop() { 
   int currentDistance = getDistanceInCm();
 
   if (currentDistance > SONAR_MIN_DISTANCE || currentDistance == 0) {
-    goForward(SPEED_LOW, 150);
+    goForward(SPEED_LOW, 100);
     if (isStuck()) {
       brakeOn(200);
       goBackward(SPEED_MEDIUM, 300);
+      brakeOn(100);
       lookAroundAndTurn();
     }
   } else if (currentDistance > 0) {
-    Serial.println("look around");
-    brakeOn(200);
+    brakeOn(100);
+    goBackward(SPEED_MEDIUM, 150);
+    brakeOn(100);
     lookAroundAndTurn();
   }
 }

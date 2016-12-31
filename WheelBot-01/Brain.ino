@@ -1,9 +1,12 @@
 void lookAroundAndTurn() {
   int leftDistance = getDistanceOnTheLeft();
   int rightDistance = getDistanceOnTheRight();
+  int straightDistance = getDistanceInCm();
 
   // decide where to go
-  if (leftDistance > rightDistance) {
+  if (straightDistance > leftDistance && straightDistance > rightDistance) {
+    // stay straight
+  } else if (leftDistance > rightDistance) {
     turnLeft();
   } else {
     turnRight();
@@ -11,43 +14,33 @@ void lookAroundAndTurn() {
 }
 
 int getDistanceOnTheLeft() {
-  int distanceOnTheLeft;
+  int distanceOnTheLeftOne;
+  int distanceOnTheLeftTwo;
   
-  // turn backwards to left
-  leftBackward(SPEED_MEDIUM, 0);
-  rightBackward(SPEED_LOW, 0);
-  delay(300);
-  brakeOn(200);
+  headRotateLeft();
+  
+  distanceOnTheLeftOne = getDistanceInCm();
+  delay(10);
+  distanceOnTheLeftTwo = getDistanceInCm();
 
-  distanceOnTheLeft = getDistanceInCm();
+  headRotateRight();
 
-  // get back to straight position
-  leftForward(SPEED_MEDIUM, 0);
-  rightForward(SPEED_LOW, 0);
-  delay(300);
-  brakeOn(200);
-
-  return distanceOnTheLeft;
+  return max(distanceOnTheLeftOne, distanceOnTheLeftTwo);
 }
 
 int getDistanceOnTheRight() {
-  int distanceOnTheRight;
+  int distanceOnTheRightOne;
+  int distanceOnTheRightTwo;
   
-  // turn backwards to right
-  leftBackward(SPEED_LOW, 0);
-  rightBackward(SPEED_MEDIUM, 0);
-  delay(300);
-  brakeOn(200);
+  headRotateRight();
 
-  distanceOnTheRight = getDistanceInCm();
+  distanceOnTheRightOne = getDistanceInCm();
+  delay(10);
+  distanceOnTheRightTwo = getDistanceInCm();
 
-  // get back to straight position
-  leftForward(SPEED_LOW, 0);
-  rightForward(SPEED_MEDIUM, 0);
-  delay(300);
-  brakeOn(200);
+  headRotateLeft();
 
-  return distanceOnTheRight;
+  return max(distanceOnTheRightOne, distanceOnTheRightTwo);
 }
 
 boolean isStuck() {
